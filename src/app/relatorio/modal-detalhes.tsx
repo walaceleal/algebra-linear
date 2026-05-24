@@ -28,10 +28,10 @@ function ModalDetalhes({exibir, setExibir}: Props){
             <h5>{algoritmo}</h5>
 
             {/*@ts-ignore*/
-            blocos[algoritmo]?.map(b => (<>
+            blocos[algoritmo]?.map((b, i) => (<React.Fragment key={i}>
                 <h6 className='text-center'>{b.titulo}</h6>
                 <Formula latex={latex.renderizarMatriz(b.matriz)} />
-            </>))}
+            </React.Fragment>))}
         </Modal.Body>
     </Modal>
 }

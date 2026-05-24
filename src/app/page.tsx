@@ -1,66 +1,69 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+import React, { useState } from 'react';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
+import ModalRelatorio from './relatorio/modal-relatorio';
+import ModalDetalhes from './relatorio/modal-detalhes';
+
+type Props = React.PropsWithChildren & {
+
 }
+
+function PaginaRelatorio(props: Props){
+    const [exibirModal, setExibirModal] = useState(false);
+    const [exibirDetalhes, setExibirDetalhes] = useState(null);
+
+    function iniciarAnalise(){
+        setExibirModal(true);
+    }
+
+
+    return <div style={{padding: 30}}>
+        <div style={{fontWeight: 'bold', textAlign: 'center'}}>
+            <div>RELATORIO 1 DE ALGEBRA LINEAR COMPUTACIONAL</div>
+            <div>data de entrega: até 04-06-2026</div>
+        </div>
+
+        <div>
+            Considere um sistema linear de ordem 15 que tem a matriz de Hilbert como matriz dos coeficientes e que
+            a solução exata seja o vetor que possui todas as componentes iguais a 1. Resolva o sistema linear usando
+            os seguintes m ́etodos:
+            <ul style={{padding: "10px 30px"}}>
+                <li>Eliminação de Gauss</li>
+                <li>Gauss-Jordan</li>
+                <li>LU</li>
+                <li>Gauss-Seidel</li>
+                <li>Jacobi</li>
+                <li>SOR</li>
+            </ul>
+        </div>
+
+        <div>
+            <div>Considerações:</div>
+            <ol style={{padding: '10px 30px'}}>
+                <li>Utilize tipos diferentes ( int, float, double) e fa ̧ca uma an ́alise dos erros de arredondamento na
+        solução encontrada</li>
+                <li>Compare as soluções num ́ericas e diga qual  ́e o m ́etodo mais indicado dentre os 6 m ́etodos para
+        resolver este tipo de sistema</li>
+                <li>Matriz de Hilbert:</li>
+            </ol>
+
+            <div style={{padding: '0px 40px'}}>
+                hij = 1 i + j − 1, i = 1, · · · , n; j = 1, · · · , n
+            </div>
+        </div>
+
+        <hr className='w-100 mt-5' />
+        <div className='d-flex justify-content-center w-100 p-3'>
+            <Button variant='primary' onClick={iniciarAnalise}>Resolver Sistema</Button>
+        </div>
+
+
+        <ModalRelatorio exibir={exibirModal} setExibir={setExibirModal} setExibirDetalhes={setExibirDetalhes}/>
+        <ModalDetalhes exibir={exibirDetalhes} setExibir={setExibirDetalhes}/>
+    </div>
+}
+
+export default PaginaRelatorio;
