@@ -5,14 +5,17 @@ import { Button, Card, Modal } from 'react-bootstrap';
 import MetodoDireto from './metodo-direto';
 import MetodoIterativo from './metodo-iterativo';
 
+import {Algoritmos}  from "../../../tipos";
+
 import './estilo.css';
 
 interface Props {
-    exibir: boolean
-    setExibir: Function
+    exibir: boolean,
+    setExibir: Function,
+    setExibirDetalhes: Function,
 }
 
-function ModalRelatorio({exibir, setExibir}: Props){
+function ModalRelatorio({exibir, setExibir, setExibirDetalhes}: Props){
     return <Modal dialogClassName='custom-modal-width' scrollable show={exibir} onHide={() => setExibir(false)}>
         <Modal.Header closeButton>
             <Modal.Title>Simulação</Modal.Title>
@@ -20,18 +23,18 @@ function ModalRelatorio({exibir, setExibir}: Props){
         <Modal.Body>
             <h5>Métodos Diretos</h5>
             <div className='d-flex' style={{gap: 15}}>
-                <MetodoDireto nome='Eliminação de Gauss' />
-                <MetodoDireto nome='Gauss-Jordan' />
-                <MetodoDireto nome='LU' />
+                <MetodoDireto algoritmo={Algoritmos.ELIMINACAO_GAUSSIANA} setExibirDetalhes={setExibirDetalhes}/>
+                <MetodoDireto algoritmo={Algoritmos.GAUSS_JORDAN}  setExibirDetalhes={setExibirDetalhes}/>
+                <MetodoDireto algoritmo={Algoritmos.LU} setExibirDetalhes={setExibirDetalhes}/>
             </div>
             
             <hr className='w-100'/>
 
             <h5>Métodos Iterativos</h5>
             <div className='d-flex' style={{gap: 15}}>
-                <MetodoDireto nome='Gauss-Seidel' />
-                <MetodoDireto nome='Jacobi' />
-                <MetodoDireto nome='SOR' />
+                <MetodoDireto algoritmo={Algoritmos.GAUSS_SEIDEL} setExibirDetalhes={setExibirDetalhes}/>
+                <MetodoDireto algoritmo={Algoritmos.JACOBI}  setExibirDetalhes={setExibirDetalhes}/>
+                <MetodoDireto algoritmo={Algoritmos.SOR}  setExibirDetalhes={setExibirDetalhes}/>
             </div>
         </Modal.Body>
         <Modal.Footer style={{justifyContent: 'center'}}>

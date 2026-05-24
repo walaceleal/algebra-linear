@@ -1,5 +1,11 @@
+import {criarBloco, criarRelatorio} from "@/algoritimos/relatorio";
+import { Algoritmos } from "../../tipos";
+
 function eliminacaoGauss(matriz) {
     const n = matriz.length;
+
+    const relatorio = criarRelatorio(Algoritmos.ELIMINACAO_GAUSSIANA);
+    criarBloco(relatorio, "matriz inicial", matriz);
 
     // Etapa de eliminação (triangular superior)
     for (let k = 0; k < n - 1; k++) {
@@ -16,6 +22,8 @@ function eliminacaoGauss(matriz) {
                 matriz[i][j] = matriz[i][j] - fator * matriz[k][j];
             }
         }
+
+        criarBloco(relatorio, `eliminação da ${k + 1}ª coluna`, matriz);
     }
 
     // Retrosubstituição
@@ -29,6 +37,8 @@ function eliminacaoGauss(matriz) {
         }
 
         x[i] = (matriz[i][n] - soma) / matriz[i][i];
+
+        criarBloco(relatorio, `retrosubstituição ${i + 1}ª variável`, [x])
     }
 
     return x;

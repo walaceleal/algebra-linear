@@ -10,13 +10,14 @@ import {criarMatrizAumentada, duplicarMatriz, duplicarVetor} from '@/algoritimos
 import gaussSeidel from '@/algoritimos/gauss-seidel';
 import jacobi from '@/algoritimos/jacobi';
 import SOR from '@/algoritimos/SOR';
+import { Algoritmos } from '../../../tipos';
 
 interface Props {
-    nome: string
+    algoritmo: Algoritmos,
+    setExibirDetalhes: Function
 }
 
-function MetodoDireto({nome}: Props){
-
+function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
     const malCondicionado = {
         A : [
             [0.0001, 1, 1, 1],
@@ -79,9 +80,7 @@ function MetodoDireto({nome}: Props){
     }
 
     const metodoGenerico = () => [0, 1, 2]
-    const solucao = (metodos[nome] ?? metodoGenerico)();
-
-    //console.log(solucao); // [2, 3, -1]
+    const solucao = (metodos[algoritmo] ?? metodoGenerico)();
 
     let latex = '';
 
@@ -93,8 +92,8 @@ function MetodoDireto({nome}: Props){
     return <Card className='w-100 text-center'>
         <Card.Body>
             <Card.Title className='d-flex justify-content-between align-items-center'> 
-                <span>{nome}</span>
-                <Button>i</Button>
+                <span>{algoritmo}</span>
+                <Button onClick={() => setExibirDetalhes(algoritmo)}>i</Button>
             </Card.Title>
             <hr className='w-100'/>
             <div className='w-100 d-flex'>

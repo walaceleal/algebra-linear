@@ -1,8 +1,14 @@
+import { Algoritmos } from "../../tipos";
+import { criarBloco, criarRelatorio } from "./relatorio";
+
 function gaussJordan(matriz) {
     const n = matriz.length;
+    
+    const relatorio = criarRelatorio(Algoritmos.GAUSS_JORDAN);
+    criarBloco(relatorio, 'matriz inicial', matriz);
+
 
     for (let i = 0; i < n; i++) {
-
         // Verifica pivô nulo
         if (matriz[i][i] === 0) {
             throw new Error("Pivô nulo encontrado. Precisa de pivotamento.");
@@ -14,6 +20,9 @@ function gaussJordan(matriz) {
             matriz[i][j] /= pivo;
         }
 
+        criarBloco(relatorio, `normaliza a ${i + 1}ª linha`, matriz);
+
+
         // Zera todas as outras linhas
         for (let k = 0; k < n; k++) {
             if (k !== i) {
@@ -24,10 +33,15 @@ function gaussJordan(matriz) {
                 }
             }
         }
+        criarBloco(relatorio, `zera os elementos da ${i + 1}ª coluna`, matriz);
     }
 
     // Extrai solução
-    return matriz.map(linha => linha[n]);
+    const s = matriz.map(linha => linha[n]);
+    
+    criarBloco(relatorio, `o vetor b é a solução`, [s]);
+
+    return s;
 }
 
 export default gaussJordan;

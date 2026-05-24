@@ -1,7 +1,17 @@
+import { Algoritmos } from "../../tipos";
+import { criarBloco, criarRelatorio } from "./relatorio";
+
 function SOR(A, b, omega = 1.25, tol = 1e-10, maxIter = 100) {
+    const relatorio = criarRelatorio(Algoritmos.SOR);
+    criarBloco(relatorio, 'matriz A', A);
+    criarBloco(relatorio, 'vetor b', [b]);
+    
     const n = A.length;
     let x = new Array(n).fill(0);
     let xOld = [...x];
+
+    criarBloco(relatorio, 'chute inicial', [x]);
+
 
     for (let iter = 0; iter < maxIter; iter++) {
 
@@ -33,6 +43,8 @@ function SOR(A, b, omega = 1.25, tol = 1e-10, maxIter = 100) {
         for (let i = 0; i < n; i++) {
             erro = Math.max(erro, Math.abs(x[i] - xOld[i]));
         }
+
+        criarBloco(relatorio, `${iter}: atualiza x, erro=${erro.toFixed(8)}`, [xOld, x]);
 
         if (erro < tol) {
             console.log(`Convergiu em ${iter + 1} iterações`);

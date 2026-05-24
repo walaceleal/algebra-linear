@@ -1,6 +1,12 @@
+import { Algoritmos } from "../../tipos";
+import { criarBloco, criarRelatorio } from "./relatorio";
+
 function decomposicaoLU(A, b) {
-    console.log('decomposicaoLU', A, b)
     const n = A.length;
+
+    const relatorio = criarRelatorio(Algoritmos.LU);
+    criarBloco(relatorio, "matriz A", A);
+    criarBloco(relatorio, "vetor b", [b]);
 
     // Inicializa L e U
     const L = Array.from({ length: n }, () => Array(n).fill(0));
@@ -16,7 +22,10 @@ function decomposicaoLU(A, b) {
                 soma += L[i][j] * U[j][k];
             }
             U[i][k] = A[i][k] - soma;
+
         }
+        criarBloco(relatorio, `calcula os elementos da ${i + 1}ª linha de U`, U);
+
 
         // Construção de L
         L[i][i] = 1;
@@ -33,6 +42,8 @@ function decomposicaoLU(A, b) {
 
             L[k][i] = (A[k][i] - soma) / U[i][i];
         }
+
+        criarBloco(relatorio, `calcula os elementos da ${i + 1}ª coluna de L`, L);
     }
 
     // Resolve Ly = b (substituição direta)
@@ -44,7 +55,10 @@ function decomposicaoLU(A, b) {
             soma += L[i][j] * y[j];
         }
         y[i] = b[i] - soma;
+
+        criarBloco(relatorio, `substituição direta da ${i + 1}ª componente de y: Sistema (Ly = b)`, [y]);
     }
+
 
     // Resolve Ux = y (retrosubstituição)
     const x = new Array(n).fill(0);
@@ -55,6 +69,8 @@ function decomposicaoLU(A, b) {
             soma += U[i][j] * x[j];
         }
         x[i] = (y[i] - soma) / U[i][i];
+
+        criarBloco(relatorio, `retrosubstituição da ${i + 1}ª componente de x: Sistema (Ux = y)`, [x]);
     }
 
     //return { L, U, x };

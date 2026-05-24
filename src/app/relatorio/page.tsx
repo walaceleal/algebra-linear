@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
 import ModalRelatorio from './modal-relatorio';
+import ModalDetalhes from './modal-detalhes';
 
 type Props = React.PropsWithChildren & {
 
@@ -12,6 +13,7 @@ type Props = React.PropsWithChildren & {
 
 function PaginaRelatorio(props: Props){
     const [exibirModal, setExibirModal] = useState(true);
+    const [exibirDetalhes, setExibirDetalhes] = useState(null);
 
     function iniciarAnalise(){
         setExibirModal(true);
@@ -59,7 +61,8 @@ function PaginaRelatorio(props: Props){
         </div>
 
 
-        <ModalRelatorio exibir={exibirModal} setExibir={setExibirModal} />
+        <ModalRelatorio exibir={exibirModal} setExibir={setExibirModal} setExibirDetalhes={setExibirDetalhes}/>
+        <ModalDetalhes exibir={exibirDetalhes} setExibir={setExibirDetalhes}/>
     </div>
 }
 

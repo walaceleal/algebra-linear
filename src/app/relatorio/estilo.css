@@ -2,3 +2,12 @@
   width: 90vw;
   max-width: none !important;
 }
+
+
+.backdrop-detalhes {
+  z-index: 1060;
+}
+
+.detalhes {
+    z-index: 1065;
+}
