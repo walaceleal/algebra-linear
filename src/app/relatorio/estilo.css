@@ -1,0 +1,4 @@
+.custom-modal-width {
+  width: 90vw;
+  max-width: none !important;
+}
