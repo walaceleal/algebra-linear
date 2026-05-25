@@ -1,7 +1,7 @@
 'use client';
 
 import Formula from '@/componentes/Formula';
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Card } from 'react-bootstrap';
 import eliminacaoGauss  from '@/algoritimos/eliminacao-gaussiana';
 import gaussJordan  from '@/algoritimos/gauss-jordan';
@@ -15,6 +15,7 @@ import { TbSum } from "react-icons/tb";
 import { MdErrorOutline } from "react-icons/md";
 import { SlLoop } from "react-icons/sl";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
+import { Contexto } from '@/componentes/Contexto';
 
 
 
@@ -24,46 +25,13 @@ interface Props {
 }
 
 function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
-    const malCondicionado = {
-        A : [
-            [0.0001, 1, 1, 1],
-            [1,      1, 1, 1],
-            [1,      2, 3, 4],
-            [1,      3, 6,10]
-        ],
+    const {parametros} = useContext(Contexto);
+    const { NUMERO_MAX_ITERACOES, PRECISAO, TAMANHO_MATRIZ_HILBERT } = parametros;
 
-        b : [
-            1, 
-            4,
-            10, 
-            20
-        ]
-    }
-
-    const xHilbert = Array(12).fill(1);
+    const xHilbert = Array(TAMANHO_MATRIZ_HILBERT).fill(1);
     const matrizHilbert = criarMatrizHilbert(xHilbert);
 
-    const bemCondicionado = {
-        A : [
-            [10, 1, 1, 1],
-            [1, 8, 1, 1],
-            [1, 1, 7, 1],
-            [1, 1, 1, 6]
-        ],
-
-        b : [
-           14,
-            14,
-            14,
-            14
-        ]
-    }
-
-
-    /**/
     const {A, b} = matrizHilbert;
-
-    //console.log(raioEspectral, raioEspectral(A));
 
     const metodos = {
         'Eliminação de Gauss': () => eliminacaoGauss( 
@@ -78,15 +46,22 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
         ),
         'Gauss-Seidel': () => gaussSeidel(
             duplicarMatriz(A), 
-            duplicarVetor(b)
+            duplicarVetor(b),
+            PRECISAO,
+            NUMERO_MAX_ITERACOES
         ),
         'Jacobi': () => jacobi(
             duplicarMatriz(A), 
-            duplicarVetor(b)
+            duplicarVetor(b),
+            PRECISAO,
+            NUMERO_MAX_ITERACOES
         ),
         'SOR': () => SOR(
             duplicarMatriz(A), 
-            duplicarVetor(b)
+            duplicarVetor(b),
+            1.05,
+            PRECISAO,
+            NUMERO_MAX_ITERACOES
         ),
     }
 
