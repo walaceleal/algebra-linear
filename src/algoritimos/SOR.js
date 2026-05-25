@@ -1,7 +1,7 @@
 import { Algoritmos } from "../../tipos";
 import { criarBloco, criarRelatorio } from "./relatorio";
 
-function SOR(A, b, omega = 1.25, tol = 1e-10, maxIter = 100) {
+function SOR(A, b, omega = 1.25, tol = 1e-15, maxIter = 400) {
     const relatorio = criarRelatorio(Algoritmos.SOR);
     criarBloco(relatorio, 'matriz A', A);
     criarBloco(relatorio, 'vetor b', [b]);

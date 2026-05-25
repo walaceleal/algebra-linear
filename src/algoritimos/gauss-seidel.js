@@ -1,7 +1,7 @@
 import { Algoritmos } from "../../tipos";
 import { criarBloco, criarRelatorio } from "./relatorio";
 
-function gaussSeidel(A, b, tol = 1e-15, maxIter = 100) {
+function gaussSeidel(A, b, tol = 1e-15, maxIter = 400) {
     const relatorio = criarRelatorio(Algoritmos.GAUSS_SEIDEL);
     criarBloco(relatorio, 'matriz A', A);
     criarBloco(relatorio, 'vetor b', [b]);
