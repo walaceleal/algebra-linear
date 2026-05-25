@@ -4,6 +4,8 @@ import { Algoritmos } from "../../tipos";
 function eliminacaoGauss(matriz) {
     const n = matriz.length;
 
+    let operacoes = 0;
+
     const relatorio = criarRelatorio(Algoritmos.ELIMINACAO_GAUSSIANA);
     criarBloco(relatorio, "matriz inicial", matriz);
 
@@ -20,6 +22,8 @@ function eliminacaoGauss(matriz) {
 
             for (let j = k; j <= n; j++) {
                 matriz[i][j] = matriz[i][j] - fator * matriz[k][j];
+
+                operacoes += 1;
             }
         }
 
@@ -34,14 +38,18 @@ function eliminacaoGauss(matriz) {
 
         for (let j = i + 1; j < n; j++) {
             soma += matriz[i][j] * x[j];
+
+            operacoes += 1;
         }
 
         x[i] = (matriz[i][n] - soma) / matriz[i][i];
 
+        operacoes += 1;
+
         criarBloco(relatorio, `retrosubstituição ${i + 1}ª variável`, [x])
     }
 
-    return x;
+    return {x, operacoes};
 }
 
 export default eliminacaoGauss;

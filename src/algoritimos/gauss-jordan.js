@@ -6,6 +6,7 @@ function gaussJordan(matriz) {
     
     const relatorio = criarRelatorio(Algoritmos.GAUSS_JORDAN);
     criarBloco(relatorio, 'matriz inicial', matriz);
+    let operacoes = 0;
 
 
     for (let i = 0; i < n; i++) {
@@ -18,6 +19,8 @@ function gaussJordan(matriz) {
         const pivo = matriz[i][i];
         for (let j = 0; j <= n; j++) {
             matriz[i][j] /= pivo;
+
+            operacoes += 1;
         }
 
         criarBloco(relatorio, `normaliza a ${i + 1}ª linha`, matriz);
@@ -30,6 +33,7 @@ function gaussJordan(matriz) {
 
                 for (let j = 0; j <= n; j++) {
                     matriz[k][j] -= fator * matriz[i][j];
+                    operacoes += 1;
                 }
             }
         }
@@ -41,7 +45,7 @@ function gaussJordan(matriz) {
     
     criarBloco(relatorio, `o vetor b é a solução`, [s]);
 
-    return s;
+    return {x: s, operacoes};
 }
 
 export default gaussJordan;

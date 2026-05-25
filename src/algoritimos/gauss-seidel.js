@@ -1,10 +1,12 @@
 import { Algoritmos } from "../../tipos";
 import { criarBloco, criarRelatorio } from "./relatorio";
 
-function gaussSeidel(A, b, tol = 1e-15, maxIter = 400) {
+function gaussSeidel(A, b, tol = 1e-3, maxIter = 400) {
     const relatorio = criarRelatorio(Algoritmos.GAUSS_SEIDEL);
     criarBloco(relatorio, 'matriz A', A);
     criarBloco(relatorio, 'vetor b', [b]);
+
+    let operacoes = 0;
 
     const n = A.length;
     let x = new Array(n).fill(0); // chute inicial
@@ -23,6 +25,7 @@ function gaussSeidel(A, b, tol = 1e-15, maxIter = 400) {
                 if (j !== i) {
                     soma += A[i][j] * x[j]; 
                     // usa valores já atualizados (Gauss-Seidel)
+                    operacoes+= 1;
                 }
             }
 
@@ -31,27 +34,27 @@ function gaussSeidel(A, b, tol = 1e-15, maxIter = 400) {
             }
 
             x[i] = (b[i] - soma) / A[i][i];
+            operacoes+= 1;
         }
 
         // critério de parada
         let erro = 0;
         for (let i = 0; i < n; i++) {
             erro = Math.max(erro, Math.abs(x[i] - xOld[i]));
+            operacoes+= 1;
         }
 
         criarBloco(relatorio, `${iter}: Atualiza x, erro=${erro.toFixed(5)}`, [x]);
 
         if (erro < tol) {
-            console.log(`Convergiu em ${iter + 1} iterações`);
-            return x;
+            return {x, operacoes, iteracoes: iter + 1, precisao: tol};
         }
 
         xOld = [...x];
     }
 
-    console.log("Número máximo de iterações atingido");
-    console.log("x", x)
-    return x;
+    
+    return {x, operacoes, iteracoes: maxIter, precisao: tol};
 }
 
 export default gaussSeidel;

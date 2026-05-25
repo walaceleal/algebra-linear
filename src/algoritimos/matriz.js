@@ -2,6 +2,16 @@ export function duplicarVetor(A){
     return A.map(e => e);
 }
 
+export function calcularErro(x, _x){
+    let e = 0;
+
+    for(let i = 0; i < x.length; i++){
+        e += Math.abs(x[i] - _x[i]);
+    }
+
+    return e;
+}
+
 export function duplicarMatriz(A){
     let resposta = [];
 
