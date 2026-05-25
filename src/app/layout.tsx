@@ -26,7 +26,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
       <head>
-      <Script src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" />
+        <Script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.min.js"></Script>
+        <Script src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" />
       </head>
       <body>{children}</body>
     </html>

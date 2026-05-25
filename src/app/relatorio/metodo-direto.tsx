@@ -6,7 +6,7 @@ import { Button, Card } from 'react-bootstrap';
 import eliminacaoGauss  from '@/algoritimos/eliminacao-gaussiana';
 import gaussJordan  from '@/algoritimos/gauss-jordan';
 import LU  from '@/algoritimos/LU';
-import {criarMatrizAumentada, duplicarMatriz, duplicarVetor} from '@/algoritimos/matriz';
+import {criarMatrizAumentada, duplicarMatriz, duplicarVetor, criarMatrizHilbert, raioEspectral} from '@/algoritimos/matriz';
 import gaussSeidel from '@/algoritimos/gauss-seidel';
 import jacobi from '@/algoritimos/jacobi';
 import SOR from '@/algoritimos/SOR';
@@ -34,6 +34,9 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
         ]
     }
 
+    const xHilbert = Array(20).fill(1);
+    const matrizHilbert = criarMatrizHilbert(xHilbert);
+
     const bemCondicionado = {
         A : [
             [10, 1, 1, 1],
@@ -52,7 +55,9 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
 
 
     /**/
-    const {A, b} = bemCondicionado;
+    const {A, b} = matrizHilbert;
+
+    //console.log(raioEspectral, raioEspectral(A));
 
     const metodos = {
         'Eliminação de Gauss': () => eliminacaoGauss( 
