@@ -9,6 +9,7 @@ import {Algoritmos}  from "../../../tipos";
 
 import './estilo.css';
 import { Contexto } from '@/componentes/Contexto';
+import AjusteContexto from '@/componentes/AjusteContexto';
 
 interface Props {
     exibir: boolean,
@@ -17,7 +18,6 @@ interface Props {
 }
 
 function ModalRelatorio({exibir, setExibir, setExibirDetalhes}: Props){
-    const {parametros, setParametros} = useContext(Contexto);
 
     return <Modal dialogClassName='custom-modal-width' scrollable show={exibir} onHide={() => setExibir(false)}>
         <Modal.Header closeButton>
@@ -50,10 +50,10 @@ function ModalRelatorio({exibir, setExibir, setExibirDetalhes}: Props){
                     
                 </span>*/}
                 <div className='d-flex' style={{gap:10}}>
-                    <div className='text-center'><Form.Label style={{fontSize: 14, margin: 0}}>Dimensão</Form.Label><Form.Range step={1} min={0} max={5} /></div>
-                    <div className='text-center'><Form.Label style={{fontSize: 14, margin: 0}}>Precisão</Form.Label><Form.Range step={1} min={0} max={5} /></div>
-                    <div className='text-center'><Form.Label style={{fontSize: 14, margin: 0}}>Iterações</Form.Label><Form.Range step={1} min={0} max={5} /></div>
-                    <div className='text-center'><Form.Label style={{fontSize: 14, margin: 0}}>ω</Form.Label><Form.Range step={1} min={0} max={5} /></div>
+                    <AjusteContexto nome='Dimensão' propriedade='TAMANHO_MATRIZ_HILBERT' min={2} max={20} step={1} />
+                    <AjusteContexto nome='Tolerância' propriedade='PRECISAO' min={1e-15} max={1e-2} step={1e-16} />
+                    <AjusteContexto nome='Max. Iterações' propriedade='NUMERO_MAX_ITERACOES' min={1} max={400} step={1}/>
+                    <AjusteContexto nome='w' propriedade='OMEGA' min={0.001} max={2.5} step={0.0001}/>
                 </div>
                 <div></div>
             </Modal.Title>

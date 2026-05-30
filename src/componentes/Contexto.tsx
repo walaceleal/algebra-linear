@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 
-interface Parametros {
+export interface Parametros {
     TAMANHO_MATRIZ_HILBERT: number,
     PRECISAO: number,
-    NUMERO_MAX_ITERACOES: number
+    NUMERO_MAX_ITERACOES: number,
+    OMEGA: number
 }
 
 interface iContexto {
@@ -21,7 +22,8 @@ function ProvedorContexto(props: React.PropsWithChildren){
     const [parametros, setParametros] = useState<Parametros>({
         TAMANHO_MATRIZ_HILBERT: 2,
         PRECISAO: 1e-2,
-        NUMERO_MAX_ITERACOES: 100
+        NUMERO_MAX_ITERACOES: 100,
+        OMEGA: 1.5
     });
 
     return <Contexto.Provider value={{parametros, setParametros}}>

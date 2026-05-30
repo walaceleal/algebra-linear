@@ -47,14 +47,14 @@ export function executarMetodo({algoritmo, TAMANHO_MATRIZ_HILBERT, PRECISAO = 0,
         'SOR': () => SOR(
             duplicarMatriz(A), 
             duplicarVetor(b),
-            1.05,
+            OMEGA,
             PRECISAO,
-            NUMERO_MAX_ITERACOES
+            NUMERO_MAX_ITERACOES,
         ),
     }
 
     let solucao = metodos[algoritmo]();
-    const operacoes = solucao.operacoes || 0;
+    const operacoes = solucao.operacoes;
     const iteracoes = solucao.iteracoes || 1;
     const precisao = solucao.precisao || '∞';
 

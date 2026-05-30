@@ -27,11 +27,8 @@ interface Props {
 
 function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
     const {parametros} = useContext(Contexto);
-    const { NUMERO_MAX_ITERACOES, PRECISAO, TAMANHO_MATRIZ_HILBERT } = parametros;
 
-    const OMEGA = 1.05;
-
-    const {solucao, operacoes, precisao, iteracoes, erro} = executarMetodo({ NUMERO_MAX_ITERACOES, PRECISAO, TAMANHO_MATRIZ_HILBERT, OMEGA, algoritmo,  });
+    const {solucao, operacoes, precisao, iteracoes, erro} = executarMetodo({ ...parametros, algoritmo,  });
 
 
     let latex = '';
@@ -67,7 +64,7 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
                     </div>
                     {precisao != null && <div>
                             <IoMdCheckmarkCircleOutline fontSize={20} style={{transform: 'translateY(-1px)', marginRight: 5}} />
-                            <span>{precisao}</span>
+                            <span>{ Number.isNaN(+precisao) ? precisao : (+precisao).toExponential(0)}</span>
                         </div>
                     }
 
