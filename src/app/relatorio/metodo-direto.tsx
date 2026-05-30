@@ -16,6 +16,7 @@ import { MdErrorOutline } from "react-icons/md";
 import { SlLoop } from "react-icons/sl";
 import { IoMdCheckmarkCircleOutline } from "react-icons/io";
 import { Contexto } from '@/componentes/Contexto';
+import { executarMetodo } from '@/algoritimos';
 
 
 
@@ -28,51 +29,9 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
     const {parametros} = useContext(Contexto);
     const { NUMERO_MAX_ITERACOES, PRECISAO, TAMANHO_MATRIZ_HILBERT } = parametros;
 
-    const xHilbert = Array(TAMANHO_MATRIZ_HILBERT).fill(1);
-    const matrizHilbert = criarMatrizHilbert(xHilbert);
+    const OMEGA = 1.05;
 
-    const {A, b} = matrizHilbert;
-
-    const metodos = {
-        'Eliminação de Gauss': () => eliminacaoGauss( 
-            criarMatrizAumentada(A, b)
-        ),
-        'Gauss-Jordan': () => gaussJordan(
-            criarMatrizAumentada(A,b)
-        ),
-        'LU': () => LU(
-            duplicarMatriz(A), 
-            duplicarVetor(b)
-        ),
-        'Gauss-Seidel': () => gaussSeidel(
-            duplicarMatriz(A), 
-            duplicarVetor(b),
-            PRECISAO,
-            NUMERO_MAX_ITERACOES
-        ),
-        'Jacobi': () => jacobi(
-            duplicarMatriz(A), 
-            duplicarVetor(b),
-            PRECISAO,
-            NUMERO_MAX_ITERACOES
-        ),
-        'SOR': () => SOR(
-            duplicarMatriz(A), 
-            duplicarVetor(b),
-            1.05,
-            PRECISAO,
-            NUMERO_MAX_ITERACOES
-        ),
-    }
-
-    let solucao = metodos[algoritmo]();
-    const operacoes = solucao.operacoes || 0;
-    const iteracoes = solucao.iteracoes || 1;
-    const precisao = solucao.precisao || '∞';
-
-    solucao = solucao.x || solucao;
-
-    let erro = calcularErro(solucao, xHilbert);
+    const {solucao, operacoes, precisao, iteracoes, erro} = executarMetodo({ NUMERO_MAX_ITERACOES, PRECISAO, TAMANHO_MATRIZ_HILBERT, OMEGA, algoritmo,  });
 
 
     let latex = '';

@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
 import ModalRelatorio from './relatorio/modal-relatorio';
 import ModalDetalhes from './relatorio/modal-detalhes';

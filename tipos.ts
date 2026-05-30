@@ -6,3 +6,12 @@ export enum Algoritmos {
     JACOBI='Jacobi',
     SOR='SOR',
 }
+
+export interface RespostaAlgoritmo {
+    solucao: any[], 
+    operacoes: number,
+    precisao: number,
+    iteracoes: number, 
+    erro: number, 
+    algoritmo: Algoritmos
+}
