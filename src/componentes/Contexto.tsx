@@ -22,11 +22,11 @@ export const Contexto = React.createContext<iContexto>(null);
 
 function ProvedorContexto(props: React.PropsWithChildren){
     const [parametros, setParametros] = useState<Parametros>({
-        TAMANHO_MATRIZ_HILBERT: 2,
+        TAMANHO_MATRIZ_HILBERT: 15,
         PRECISAO: 1e-2,
         NUMERO_MAX_ITERACOES: 100,
-        OMEGA: 1.5,
-        PRECISAO_FLOAT: 128,
+        OMEGA: 0.27,
+        PRECISAO_FLOAT: 22,
     });
 
     useEffect(()=>{
