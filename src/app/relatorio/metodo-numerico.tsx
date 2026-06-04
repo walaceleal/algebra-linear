@@ -18,7 +18,7 @@ interface Props {
     setExibirDetalhes: Function
 }
 
-function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
+function MetodoNumerico({algoritmo, setExibirDetalhes}: Props){
     const {parametros} = useContext(Contexto);
 
     const {solucao, operacoes, precisao, iteracoes, erro, tempo} = executarMetodo({ ...parametros, algoritmo,  });
@@ -27,11 +27,11 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
     let latex = '';
 
     for(let i = 0; i < solucao.length; i++){
-        latex += `${solucao[i]} \\\\`;
+        latex += `${(+solucao[i]).toFixed(8)} \\\\`;
     }
 
 
-    return <Card className='w-100 text-center'>
+    return <Card className='metodo-numerico w-100 text-center'>
         <Card.Body>
             <Card.Title className='d-flex justify-content-between align-items-center'> 
                 <span>{algoritmo}</span>
@@ -76,4 +76,4 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
     </Card>
 }
 
-export default MetodoDireto;
+export default MetodoNumerico;

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Button, Card, Modal } from 'react-bootstrap';
-import MetodoDireto from './metodo-direto';
+import MetodoNumerico from './metodo-numerico';
 import MetodoIterativo from './metodo-iterativo';
 import {blocos} from '@/algoritimos/relatorio';
 import latex from '@/componentes/latex';

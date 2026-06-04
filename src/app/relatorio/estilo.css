@@ -11,3 +11,22 @@
 .detalhes {
     z-index: 1065;
 }
+
+
+.metodo-numerico {
+  max-width: calc(33.33% - 10px);
+}
+
+
+@media (max-width: 1024px) {
+  .metodo-numerico {
+    max-width: calc(50% - 10px);
+  }
+}
+
+@media (max-width: 800px) {
+  .metodo-numerico {
+    max-width: 100%;
+  }
+}
+
