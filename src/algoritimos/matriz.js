@@ -1,3 +1,5 @@
+import Decimal from 'decimal.js';
+
 export function duplicarVetor(A){
     return A.map(e => e);
 }
@@ -38,7 +40,10 @@ export function criarMatrizAumentada(A, b){
     return aumentada;
 }
 
-export function criarMatrizHilbert(x){
+export function criarMatrizHilbert(x, EXTENDER_FLOAT = true){
+    if(EXTENDER_FLOAT)
+        return _criarMatrizHilbert(x);
+
     const n = x.length;
 
     let A = [];
@@ -60,6 +65,43 @@ export function criarMatrizHilbert(x){
     }
 
     return {A, b};
+}
+
+export function _criarMatrizHilbert(x) {
+    const n = x.length;
+
+    // Converte x para Decimal
+    const xDecimal = x.map(v => new Decimal(v));
+
+    const A = [];
+
+    for (let i = 0; i < n; i++) {
+        A[i] = [];
+
+        for (let j = 0; j < n; j++) {
+            A[i][j] = new Decimal(1).div(i + j + 1);
+        }
+    }
+
+    const b = [];
+
+    for (let i = 0; i < n; i++) {
+
+        let soma = new Decimal(0);
+
+        for (let j = 0; j < n; j++) {
+            soma = soma.plus(
+                A[i][j].times(xDecimal[j])
+            );
+        }
+
+        b[i] = soma;
+    }
+
+    return {
+        A,
+        b
+    };
 }
 
 export function raioEspectral(matrix) {

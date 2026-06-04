@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import Decimal from 'decimal.js';
 
 export interface Parametros {
     TAMANHO_MATRIZ_HILBERT: number,
     PRECISAO: number,
     NUMERO_MAX_ITERACOES: number,
-    OMEGA: number
+    OMEGA: number;
+    PRECISAO_FLOAT: number,
 }
 
 interface iContexto {
@@ -23,8 +25,13 @@ function ProvedorContexto(props: React.PropsWithChildren){
         TAMANHO_MATRIZ_HILBERT: 2,
         PRECISAO: 1e-2,
         NUMERO_MAX_ITERACOES: 100,
-        OMEGA: 1.5
+        OMEGA: 1.5,
+        PRECISAO_FLOAT: 128,
     });
+
+    useEffect(()=>{
+        Decimal.set({ precision: parametros.PRECISAO_FLOAT });
+    }, [parametros])
 
     return <Contexto.Provider value={{parametros, setParametros}}>
         {props.children}

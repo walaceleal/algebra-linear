@@ -13,5 +13,6 @@ export interface RespostaAlgoritmo {
     precisao: number,
     iteracoes: number, 
     erro: number, 
-    algoritmo: Algoritmos
+    algoritmo: Algoritmos;
+    tempo: number
 }

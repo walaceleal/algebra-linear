@@ -12,6 +12,7 @@ interface Props {
 
 function AjusteContexto({nome, propriedade, min, max, step = 1}: Props){
     const {parametros, setParametros} = React.useContext(Contexto);
+    const [valor, setValor] = useState(parametros[propriedade]);
 
     function atualizarParametro (evento: any) {
 
@@ -36,11 +37,11 @@ function AjusteContexto({nome, propriedade, min, max, step = 1}: Props){
 
         <div className='d-flex justify-content-between' style={{position: 'absolute', width: '100%', padding:'0 2%', bottom: -10}}>
             <Form.Label style={{fontSize: 14, margin: 0}}>{f(min)}</Form.Label>
-            <Form.Label style={{fontSize: 14, margin: 0}}>{f(parametros[propriedade])}</Form.Label>
+            <Form.Label style={{fontSize: 14, margin: 0}}>{f(valor)}</Form.Label>
             <Form.Label style={{fontSize: 14, margin: 0}}>{f(max)}</Form.Label>
         </div>
         
-        <Form.Range defaultValue={parametros[propriedade]} onMouseUp={atualizarParametro} onKeyUp={atualizarParametro}  step={step} min={min} max={max} />
+        <Form.Range defaultValue={valor} onChange={(v) => setValor(v.target.value)} onMouseUp={atualizarParametro} onKeyUp={atualizarParametro} onTouchEnd={atualizarParametro}  step={step} min={min} max={max} />
     </div>
 }
 

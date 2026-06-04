@@ -1,15 +1,8 @@
 'use client';
 
 import Formula from '@/componentes/Formula';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Button, Card } from 'react-bootstrap';
-import eliminacaoGauss  from '@/algoritimos/eliminacao-gaussiana';
-import gaussJordan  from '@/algoritimos/gauss-jordan';
-import LU  from '@/algoritimos/LU';
-import {criarMatrizAumentada, duplicarMatriz, duplicarVetor, criarMatrizHilbert, calcularErro} from '@/algoritimos/matriz';
-import gaussSeidel from '@/algoritimos/gauss-seidel';
-import jacobi from '@/algoritimos/jacobi';
-import SOR from '@/algoritimos/SOR';
 import { Algoritmos } from '../../../tipos';
 import { TbSum } from "react-icons/tb";
 import { MdErrorOutline } from "react-icons/md";
@@ -28,7 +21,7 @@ interface Props {
 function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
     const {parametros} = useContext(Contexto);
 
-    const {solucao, operacoes, precisao, iteracoes, erro} = executarMetodo({ ...parametros, algoritmo,  });
+    const {solucao, operacoes, precisao, iteracoes, erro, tempo} = executarMetodo({ ...parametros, algoritmo,  });
 
 
     let latex = '';
@@ -53,7 +46,7 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
                         \\end{pmatrix}
                     \\)`} />
                 </div>
-                <div className='d-flex flex-column align-items-start' style={{minWidth: 75, gap: 1}}>
+                <div className='d-flex flex-column align-items-start' style={{minWidth: 100, gap: 1}}>
                     <div>
                         <TbSum fontSize={20} color='red' style={{transform: 'translateY(-2px)', marginRight: 5}} />
                         <span>{operacoes}</span>
@@ -61,6 +54,10 @@ function MetodoDireto({algoritmo, setExibirDetalhes}: Props){
                     <div>
                         <MdErrorOutline fontSize={20} color='red' style={{transform: 'translateY(-1px)', marginRight: 5}} />
                         <span>{erro > 1000 ? '∞' : erro.toFixed(2)}</span>
+                    </div>
+                    <div>
+                        <MdErrorOutline fontSize={20} color='red' style={{transform: 'translateY(-1px)', marginRight: 5}} />
+                        <span>{tempo.toFixed(1)}ms</span>
                     </div>
                     {precisao != null && <div>
                             <IoMdCheckmarkCircleOutline fontSize={20} style={{transform: 'translateY(-1px)', marginRight: 5}} />
