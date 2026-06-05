@@ -48,7 +48,7 @@ function ModalRelatorio({exibir, setExibir, setExibirDetalhes, setExibirParametr
             </div>
         </Modal.Body>
         <Modal.Footer style={{justifyContent: 'center'}}>
-            <Button>Relatório escrito</Button>
+            <Button target='_blank'  href='/relatorio.pdf'>Relatório escrito</Button>
             <Button target='_blank'  href='https://github.com/walaceleal/algebra-linear'>Código Fonte</Button>
         </Modal.Footer>
     </Modal>
