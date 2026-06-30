@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My JSXGraph Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.2/math.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js"></script>
+    <style>
+        #container {
+
+        }
+        #explicacao {
+            width: 55%;
+        }
+
+        #box {
+            width: 40%;
+            max-width: 80vh;
+            margin: 0 auto 50px;
+        }
+
+        @media (max-width: 1024px) {
+            #explicacao {
+                width: 100%;
+            }  
+            
+            #box {
+                width: calc(80% - 25px)
+            }
+        }
+    </style>
+</head>
+
+<body style="padding: 30px; margin: 0;">
+    <select class="form-select w-100 mb-3" aria-label="Default select example">
+        <option value="1">Reta</option>
+        <option value="2">Círculo</option>
+    </select>
+
+    <div id="container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+        <div id="explicacao">
+            <p class="text-center">Equação geral da reta:</p>
+            <p>\[{\color{#900}a}x + {\color{#090}b}y + {\color{#009}c} = 0\]</p>
+
+            <p>Dados os pontos \( p_1 = (x_1, y_1) \) e \( p_2 = (x_2, y_2) \), buscamos determinar qualquer ponto \( (x, y) \). Partimos do pressuposto que qualquer ponto da reta deve respeitar a equação geral da reta e portanto temos o sistema:</p>
+
+            <div style="display: flex; justify-content: space-evenly;">
+                <p>\[
+                    \begin{cases}
+                    ax + by + c = 0\\
+                    ax_1 + by_1 + c = 0\\
+                    ax_2 + by_2 + c = 0\\
+                    \end{cases}
+
+                \]</p>
+
+                <p>\[
+                    \begin{bmatrix}
+                        x & y & 1 \\
+                        x_1 & y_1 & 1 \\
+                        x_2 & y_2 & 1
+                        \end{bmatrix}
+                        \begin{bmatrix}
+                        a \\
+                        b \\
+                        c
+                        \end{bmatrix}
+                        =
+                        \begin{bmatrix}
+                        0 \\
+                        0 \\
+                        0
+                    \end{bmatrix}
+                \]
+                </p>
+            </div>
+
+
+            <p>¹Sabemos que um sistema homogênio tem solução não trivial, quando \( det(A) = 0 \)</p>
+            <p>Com objetivo de escrever a equação, é conveniente resolver o determinante utilizando o ²Teorema de Laplace.</p>
+
+            <div style="display: flex; justify-content: space-evenly;">
+                <p>
+                \[
+                    \begin{vmatrix}
+                    x&y&1\\
+                    x_1&y_1&1\\
+                    x_2&y_2&1
+                    \end{vmatrix}=0
+                \]
+                </p>
+
+                
+                <p>
+                \[
+                    {\color{#900}
+                    \begin{vmatrix}
+                    y_1 & 1\\
+                    y_2 & 1
+                    \end{vmatrix}}
+                    x
+                    
+                    {\color{#090}
+                    -\begin{vmatrix}
+                    x_1 & 1\\
+                    x_2 & 1
+                    \end{vmatrix}}
+                    y
+                    +
+                    {\color{#009}
+                    \begin{vmatrix}
+                    x_1 & y_1\\
+                    x_2 & y_2
+                    \end{vmatrix}}
+                    =0
+                    \]
+                </p>
+            </div>
+            <div style="display: flex; justify-content: space-evenly;">
+                <span id="p1"></span>
+                <span id="p2"></span>
+            </div>
+            <div style="display: flex; justify-content: space-evenly;">
+                <div id="calculo_a"></div>
+                <div id="calculo_b"></div>
+                <div id="calculo_c"></div>
+            </div>
+        </div>
+        <div id="box" class="jxgbox" style="aspect-ratio: 1/1;"></div>
+    </div>
+
+    <script>
+        var board = JXG.JSXGraph.initBoard( 'box', { boundingbox: [-5, 5, 5, -5], axis: true, pan: {enabled: false}});
+
+        let plano = [];
+
+        function adicionarPonto(x, y){
+            const nome = `P${plano.length + 1}`;
+            const p = board.create('point', [x, y], {name: nome});
+            plano.push(p)
+        }
+
+        limparPlanoCartesiano();
+        
+        function limparPlanoCartesiano(){
+            render("p1", `p_1 = ?`)
+            render("p2", `p_2 = ?`)
+            render("calculo_a", `a = ?`)
+
+            mostrarCalculos('calculo_a', '#900', null, 'a', null)
+            mostrarCalculos('calculo_b', '#090', null, 'b', null)
+            mostrarCalculos('calculo_c', '#009', null, 'c', null)
+
+            board.removeObject(plano);
+            plano = [];
+        }
+
+        function det(M){
+            return M[0][0] * M[1][1] - M[0][1] * M[1][0];
+        }
+
+        function calcularReta(){
+            const x1 = plano[0].X();
+            const y1 = plano[0].Y();
+
+            const x2 = plano[1].X();
+            const y2 = plano[1].Y();
+            
+            const a = det([
+                [y1, 1],
+                [y2, 1],
+            ])
+
+            const b = -det([
+                [x1, 1],
+                [x2, 1],
+            ])
+
+            const c = det([
+                [x1, y1],
+                [x2, y2]
+            ]);
+
+            render("p1", `p_1 = (${x1.toFixed(2)}, ${y1.toFixed(2)})`)
+            render("p2", `p_2 = (${x2.toFixed(2)}, ${y2.toFixed(2)})`)
+
+            mostrarCalculos('calculo_a', '#900', [[y1, 1 ],[y2, 1 ]], 'a', a)
+            mostrarCalculos('calculo_b', '#090', [[x1, 1 ],[x2, 1 ]], 'b', b, '-')
+            mostrarCalculos('calculo_c', '#009', [[x1, y1],[x2, y2]], 'c', c)
+
+            const config = { name:'y = ax + b', withLabel:false, strokeWidth: 3, color: '#0808'};
+            const funcao = (x, y) =>  a * x + b* y + c;
+
+            const grafico = board.create('implicitcurve', [funcao], config)
+            plano.push(grafico);
+        }
+
+        board.on('down', function(e){
+            const [x, y] = board.getUsrCoordsOfMouse(e);
+
+            if(plano.length >= 2){
+                limparPlanoCartesiano();
+            }
+
+            adicionarPonto(x, y);
+            
+            
+            if(plano.length == 2){
+                calcularReta();
+            }        
+        });
+
+        function render(id, latex){
+            const div = document.getElementById(id);
+            div.innerHTML = "$$" + latex + "$$";
+
+            // Renderiza apenas o elemento alterado
+            MathJax.typesetPromise([div]);
+        }
+
+        function mostrarSistema(){
+
+    render(`
+\\begin{cases}
+2x+3y-z=5\\\\
+x-y+4z=2\\\\
+3x+2y+z=7
+\\end{cases}
+`);
+
+}
+
+    function mostrarCalculos(id, cor, matriz, nome, valor, sinal=''){
+        const conteudo = matriz ? matriz.map(l => l.map(e => e.toFixed(2)).join('&')).join('\\\\'): '?&?\\\\?&?';
+        const latex = `
+            {\\color{${cor}}
+                ${nome} = ${sinal}\\begin{vmatrix}
+                    ${conteudo}
+                    \\end{vmatrix}
+                    = ${valor?.toFixed(2) || '?'}
+                }`
+
+        render(id, latex);
+    }
+    </script>
+</body>
+</html>
