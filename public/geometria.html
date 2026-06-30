@@ -21,8 +21,8 @@
         }
 
         #box {
-            width: 40%;
-            max-width: 80vh;
+            width: 40vw;
+            height: 40vw;
             margin: 0 auto 50px;
         }
 
@@ -32,13 +32,19 @@
             }  
             
             #box {
-                width: calc(80% - 25px)
+                width: calc(80vw - 25px);
+                height: calc(80vw - 25px)
+            }
+
+            body{
+                overflow-x: hidden;
+                font-size: 3.5vw;
             }
         }
     </style>
 </head>
 
-<body style="padding: 30px; margin: 0;">
+<body style="padding: 30px; margin: 0">
     <select class="form-select w-100 mb-3" aria-label="Default select example">
         <option value="1">Reta</option>
         <option value="2">Círculo</option>
@@ -127,7 +133,7 @@
                 <span id="p1"></span>
                 <span id="p2"></span>
             </div>
-            <div style="display: flex; justify-content: space-evenly;">
+            <div style="min-height: 500px;">
                 <div id="calculo_a"></div>
                 <div id="calculo_b"></div>
                 <div id="calculo_c"></div>
@@ -217,12 +223,15 @@
             }        
         });
 
-        function render(id, latex){
+        async function render(id, latex){
             const div = document.getElementById(id);
+            div.style.opacity = 0;
+            div.style.overflow = 'hidden'
             div.innerHTML = "$$" + latex + "$$";
 
             // Renderiza apenas o elemento alterado
-            MathJax.typesetPromise([div]);
+            await MathJax.typesetPromise([div]);
+            div.style.opacity = 1;
         }
 
         function mostrarSistema(){
