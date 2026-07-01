@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My JSXGraph Example</title>
+    <title>UERJ - Álgebra Linear Computacional</title>
+    <link rel="icon" href="/icon.png">
     <script src="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js"></script>
     <link rel="stylesheet" type="text/css"
           href="https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css">
@@ -45,9 +46,10 @@
 </head>
 
 <body style="padding: 30px; margin: 0">
-    <select class="form-select w-100 mb-3" aria-label="Default select example">
-        <option value="1">Reta</option>
-        <option value="2">Círculo</option>
+    <select id="forma" class="form-select w-100 mb-3" aria-label="Default select example">
+        <option value="2">Reta</option>
+        <option value="3">Círculo</option>
+        <option value="5">Cônica</option>
     </select>
 
     <div id="container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
@@ -132,17 +134,34 @@
             <div style="display: flex; justify-content: space-evenly;">
                 <span id="p1"></span>
                 <span id="p2"></span>
+                <span id="p3"></span>
+                <span id="p4"></span>
             </div>
             <div style="min-height: 500px;">
                 <div id="calculo_a"></div>
                 <div id="calculo_b"></div>
                 <div id="calculo_c"></div>
+                <div id="calculo_d"></div>
+                <div id="calculo_e"></div>
             </div>
         </div>
         <div id="box" class="jxgbox" style="aspect-ratio: 1/1;"></div>
     </div>
 
     <script>
+        const cores = [
+            '#900', // vermelho
+            '#090', // verde
+            '#009', // azul
+            //'#990', // amarelo/oliva
+            '#909', // roxo
+            //'#099', // ciano
+            '#f60', // laranja
+            '#600', // vinho
+            '#069', // azul petróleo
+            '#666'  // cinza
+        ];
+
         var board = JXG.JSXGraph.initBoard( 'box', { boundingbox: [-5, 5, 5, -5], axis: true, pan: {enabled: false}});
 
         let plano = [];
@@ -168,58 +187,121 @@
             plano = [];
         }
 
-        function det(M){
-            return M[0][0] * M[1][1] - M[0][1] * M[1][0];
+        function cofator(M, i, j){
+            return Math.pow(-1, i) * subMatriz(M, i, j);
         }
 
-        function calcularReta(){
-            const x1 = plano[0].X();
-            const y1 = plano[0].Y();
+        function subMatriz(M/*: number[][]*/, i/*: number*/, j/*:number*/){
+            let matriz/*: number[][]*/ = [];
 
-            const x2 = plano[1].X();
-            const y2 = plano[1].Y();
-            
-            const a = det([
-                [y1, 1],
-                [y2, 1],
-            ])
 
-            const b = -det([
-                [x1, 1],
-                [x2, 1],
-            ])
+            for(let _i = 1; _i < M.length; _i++){
+                let nI = _i < i ? _i : _i + 1;
 
-            const c = det([
-                [x1, y1],
-                [x2, y2]
-            ]);
+                matriz[_i - 1] = [];
 
-            render("p1", `p_1 = (${x1.toFixed(2)}, ${y1.toFixed(2)})`)
-            render("p2", `p_2 = (${x2.toFixed(2)}, ${y2.toFixed(2)})`)
+                for(let _j = 1;  _j < M.length; _j++){
+                    let nJ = _j < j ? _j : _j + 1;
 
-            mostrarCalculos('calculo_a', '#900', [[y1, 1 ],[y2, 1 ]], 'a', a)
-            mostrarCalculos('calculo_b', '#090', [[x1, 1 ],[x2, 1 ]], 'b', b, '-')
-            mostrarCalculos('calculo_c', '#009', [[x1, y1],[x2, y2]], 'c', c)
+                    matriz[_i - 1].push(M[nI - 1][nJ - 1]);
+                }
+            }
 
-            const config = { name:'y = ax + b', withLabel:false, strokeWidth: 3, color: '#0808'};
-            const funcao = (x, y) =>  a * x + b* y + c;
+            return matriz;
+        }
+
+        function det(M/*: number[][]*/){
+            if(M.length == 1)
+                return M[0][0];
+
+            let soma = 0;
+            for(let i = 1; i <= M.length; i++){
+                soma += M[i - 1][1 - 1] * cofator(M, i, 1);
+            }
+
+            return soma;
+        }
+
+        function cofator(M/*: number[][]*/, i/*: number*/, j/*: number*/){
+            return Math.pow(-1, i + j) * det(subMatriz(M, i, j)) ;
+        }
+
+        function calcularCirculo(){
+            const equacao = (x, y) => [x*x + y*y, x, y, 1] 
+            return calcularFigura(equacao, 4);
+        }
+
+        function calcularConica(){
+            const equacao = (x, y) => [x*x, x*y, y*y, x, y, 1] 
+            return calcularFigura(equacao, 6);
+        }
+
+         function calcularReta(){
+            const equacao = (x, y) => [x, y, 1];
+            return calcularFigura(equacao, 3);
+        }
+
+        function prod(A, B){
+            if(A.length !== B.length)
+                throw new Error(`Produto Interno: Dim(A)=${A.length} != Dim(B)=${B.length}`)
+
+            let soma = 0;
+
+            for(let i = 0; i < A.length; i++){
+                soma += A[i] * B[i];
+            }
+
+            return soma;
+        }
+
+        function calcularFigura(funcaoM, dimensao=3){
+            const M = [
+                new Array(dimensao).fill(1),
+                ...plano.map(p => funcaoM(p.X(), p.Y()))
+            ]
+
+            const incognitas = new Array(dimensao).fill(1).map((_, i)=> cofator(M, 1, i + 1))
+
+            for(let i = 0; i < plano.length; i++){
+                let p = plano[i];
+                render(`p${i + 1}`, `p_${i + 1} = (${p.X().toFixed(2)}, ${p.Y().toFixed(2)})`)
+            }
+
+            for(let i = 0; i < incognitas.length;  i++){
+                const letra = String.fromCharCode('a'.charCodeAt(0) + i);
+                mostrarCalculos(`calculo_${letra}`, cores[i], subMatriz(M, 1, i + 1), letra, incognitas[i], i%2 == 1 ? '-' : undefined)
+            }
+
+            const config = { name:'equação', withLabel:false, strokeWidth: 3, color: '#0808'};
+            const funcao = (x, y) => prod(funcaoM(x, y), incognitas);
 
             const grafico = board.create('implicitcurve', [funcao], config)
             plano.push(grafico);
         }
 
+        
+        document.getElementById("forma").addEventListener("change", () => {
+            limparPlanoCartesiano();
+        })
+
         board.on('down', function(e){
             const [x, y] = board.getUsrCoordsOfMouse(e);
 
-            if(plano.length >= 2){
+            const NUM_PONTOS = +document.getElementById("forma").value
+
+            if(plano.length >= NUM_PONTOS){
                 limparPlanoCartesiano();
             }
 
             adicionarPonto(x, y);
             
             
-            if(plano.length == 2){
-                calcularReta();
+            if(plano.length == NUM_PONTOS){
+                switch(NUM_PONTOS){
+                    case 2: return calcularReta();  
+                    case 3: return calcularCirculo();  
+                    case 5: return calcularConica();
+                }
             }        
         });
 
