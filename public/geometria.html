@@ -18,16 +18,29 @@
 
         }
         #explicacao {
-            width: 55%;
+            width: 70%;
         }
 
         #box {
-            width: 40vw;
-            height: 40vw;
+            width: 25vw;
+            height: 25vw;
             margin: 0 auto 50px;
         }
 
+        #teorema_laplace_reduzida {
+            display: none;
+        }
+
+
         @media (max-width: 1024px) {
+            #teorema_laplace_reduzida {
+                display: block;
+            }
+
+            #teorema_laplace {
+                display: none;
+            }
+
             #explicacao {
                 width: 100%;
             }  
@@ -37,9 +50,17 @@
                 height: calc(80vw - 25px)
             }
 
-            body{
+            body, #forma{
                 overflow-x: hidden;
                 font-size: 3.5vw;
+            }
+
+            #pontos {
+                font-size: 2.0vw;
+            }
+
+            #teorema_laplace_reduzida, #sistema_explicacao, #matriz_explicacao, #calculos {
+                font-size: 2.7vw;
             }
         }
     </style>
@@ -48,46 +69,20 @@
 <body style="padding: 30px; margin: 0">
     <select id="forma" class="form-select w-100 mb-3" aria-label="Default select example">
         <option value="2">Reta</option>
-        <option value="3">Círculo</option>
+        <option value="3">Circunferência</option>
         <option value="5">Cônica</option>
     </select>
 
     <div id="container" style="display: flex; justify-content: space-between; flex-wrap: wrap;">
         <div id="explicacao">
-            <p class="text-center">Equação geral da reta:</p>
-            <p>\[{\color{#900}a}x + {\color{#090}b}y + {\color{#009}c} = 0\]</p>
+            <p class="text-center">Equação geral da <span class="nome_figura"></span>:</p>
+            <p id="equacao_geral"></p>
 
-            <p>Dados os pontos \( p_1 = (x_1, y_1) \) e \( p_2 = (x_2, y_2) \), buscamos determinar qualquer ponto \( (x, y) \). Partimos do pressuposto que qualquer ponto da reta deve respeitar a equação geral da reta e portanto temos o sistema:</p>
+            <p>Dados os pontos \( p_1 = (x_1, y_1) \) ... \( p_n = (x_2, y_2) \), buscamos determinar qualquer ponto \( (x, y) \). Partimos do pressuposto que qualquer ponto da <span class="nome_figura"></span> deve respeitar a equação geral da <span class="nome_figura"></span> e portanto temos o sistema:</p>
 
-            <div style="display: flex; justify-content: space-evenly;">
-                <p>\[
-                    \begin{cases}
-                    ax + by + c = 0\\
-                    ax_1 + by_1 + c = 0\\
-                    ax_2 + by_2 + c = 0\\
-                    \end{cases}
-
-                \]</p>
-
-                <p>\[
-                    \begin{bmatrix}
-                        x & y & 1 \\
-                        x_1 & y_1 & 1 \\
-                        x_2 & y_2 & 1
-                        \end{bmatrix}
-                        \begin{bmatrix}
-                        a \\
-                        b \\
-                        c
-                        \end{bmatrix}
-                        =
-                        \begin{bmatrix}
-                        0 \\
-                        0 \\
-                        0
-                    \end{bmatrix}
-                \]
-                </p>
+            <div style="display: flex; justify-content: space-evenly; flex-wrap: wrap;">
+                <p id="sistema_explicacao"></p>
+                <p id="matriz_explicacao"></p>
             </div>
 
 
@@ -95,7 +90,7 @@
             <p>Com objetivo de escrever a equação, é conveniente resolver o determinante utilizando o ²Teorema de Laplace.</p>
 
             <div style="display: flex; justify-content: space-evenly;">
-                <p>
+                <!--p>
                 \[
                     \begin{vmatrix}
                     x&y&1\\
@@ -103,10 +98,11 @@
                     x_2&y_2&1
                     \end{vmatrix}=0
                 \]
-                </p>
+                </p-->
 
                 
-                <p>
+                <p id="teorema_laplace_reduzida"></p>
+                <p id="teorema_laplace">
                 \[
                     {\color{#900}
                     \begin{vmatrix}
@@ -131,13 +127,15 @@
                     \]
                 </p>
             </div>
-            <div style="display: flex; justify-content: space-evenly;">
+            <div id="pontos" style="display: flex; justify-content: space-evenly;">
                 <span id="p1"></span>
                 <span id="p2"></span>
                 <span id="p3"></span>
                 <span id="p4"></span>
+                <span id="p5"></span>
+                <span id="p6"></span>
             </div>
-            <div style="min-height: 500px;">
+            <div id="calculos" style="min-height: 500px;">
                 <div id="calculo_a"></div>
                 <div id="calculo_b"></div>
                 <div id="calculo_c"></div>
@@ -162,6 +160,36 @@
             '#666'  // cinza
         ];
 
+        const RETA = 2;
+        const CIRCUNFERENCIA = 3;
+        const CONICA = 5;
+
+        const CONFIG_EQUACOES = {}
+
+        CONFIG_EQUACOES[CIRCUNFERENCIA] = {
+            termos: ['(x^2 + y^2)', 'x', 'y', ''],
+            equacao: (x, y) => [x*x + y*y, x, y, 1],
+            dimensao: 4,
+            nome: 'circunferência'
+        }
+
+        CONFIG_EQUACOES[RETA] = {
+            termos: ['x', 'y', ''],
+            equacao: (x, y) => [x, y, 1],
+            dimensao: 3,
+            nome: 'reta'
+        }
+
+        CONFIG_EQUACOES[CONICA] = {
+            termos: ['x^2', 'xy', 'y^2', 'x', 'y', ''],
+            equacao: (x, y) => [x*x, x*y, y*y, x, y, 1] ,
+            dimensao: 6,
+            nome: 'cônica'
+        }
+
+        let NUM_PONTOS = RETA;
+        
+
         var board = JXG.JSXGraph.initBoard( 'box', { boundingbox: [-5, 5, 5, -5], axis: true, pan: {enabled: false}});
 
         let plano = [];
@@ -173,6 +201,7 @@
         }
 
         limparPlanoCartesiano();
+        configurarEquacaoGeral();
         
         function limparPlanoCartesiano(){
             render("p1", `p_1 = ?`)
@@ -185,10 +214,6 @@
 
             board.removeObject(plano);
             plano = [];
-        }
-
-        function cofator(M, i, j){
-            return Math.pow(-1, i) * subMatriz(M, i, j);
         }
 
         function subMatriz(M/*: number[][]*/, i/*: number*/, j/*:number*/){
@@ -226,19 +251,137 @@
             return Math.pow(-1, i + j) * det(subMatriz(M, i, j)) ;
         }
 
-        function calcularCirculo(){
-            const equacao = (x, y) => [x*x + y*y, x, y, 1] 
-            return calcularFigura(equacao, 4);
+        function criarMatrizTermos(termos){
+            const vetor_dimensao = new Array(termos.length).fill(1);
+            const matriz = vetor_dimensao.map((_, i) => {
+                return termos.map(t => {
+                    if(t == '')
+                        return '1';
+
+                    return i == 0 ? t : t.replace('x', `x_${i}`).replace('y', `y_${i}`)
+                })
+            });
+
+            return  matriz;
         }
 
-        function calcularConica(){
-            const equacao = (x, y) => [x*x, x*y, y*y, x, y, 1] 
-            return calcularFigura(equacao, 6);
+        function criarLatexMatriz(matriz, cor = '#000', nome, valor, sinal = ''){
+            if(!matriz)
+                return '?&?\\\\?&?';
+
+            const conteudo = matriz.map(l => l.map(e => typeof e === "number" ? e.toFixed(2) : e).join('&')).join('\\\\');
+
+            nome = nome ? nome + ' = ' : '';
+            valor = valor ? ' = ' + (valor?.toFixed(2) || '?') : ''
+
+            return `{\\color{${cor}}
+                ${nome} ${sinal}\\begin{vmatrix}
+                    ${conteudo}
+                    \\end{vmatrix}
+                    ${valor}
+                }`;
         }
 
-         function calcularReta(){
-            const equacao = (x, y) => [x, y, 1];
-            return calcularFigura(equacao, 3);
+        function configurarEquacaoGeral(){
+            const termos = CONFIG_EQUACOES[NUM_PONTOS].termos;
+            let latex_termos = termos.map((t, i) => {
+                const l = letra(i);
+                const c = cores[i];
+
+                return `{\\color{${c}}${l}}${t}`
+            })
+
+            let dom_nome = document.getElementsByClassName('nome_figura');
+            for(let dom of dom_nome){
+                dom.innerHTML =  CONFIG_EQUACOES[NUM_PONTOS].nome;
+            }
+
+            render('equacao_geral', `${latex_termos.join(' + ')} = 0`);
+
+
+            const vetor_dimensao = new Array(termos.length).fill(1);
+            const matriz = vetor_dimensao.map((_, i) => {
+                return termos.map(t => {
+                    if(t == '')
+                        return '1';
+
+                    return i == 0 ? t : t.replace('x', `x_${i}`).replace('y', `y_${i}`)
+                }).join('&')
+            }).join('\\\\');
+
+            const incognitas = vetor_dimensao.map((_, i) => letra(i)).join('\\\\');
+            const zeros = vetor_dimensao.map((_, i) => '0').join('\\\\');
+
+            const matriz_explicacao=  `
+                \\begin{bmatrix}
+                    ${matriz}
+                    \\end{bmatrix}
+                    \\begin{bmatrix}
+                    ${incognitas}
+                    \\end{bmatrix}
+                    =
+                    \\begin{bmatrix}
+                    ${zeros}
+                \\end{bmatrix}`
+
+            render('matriz_explicacao', matriz_explicacao);
+
+
+            const sistema = vetor_dimensao.map((_, i) => {
+                let t = termos.map((t,j) => {
+                    const eq = i == 0 ? t : t.replace('x', `x_${i}`).replace('y', `y_${i}`);
+                    return `${letra(j)}${eq}`
+                })
+                
+                return `${t.join(' + ')} = 0`
+            }).join('\\\\\n');
+
+            const sistema_explicacao = `\\begin{cases}
+                    ${sistema}
+                \\end{cases}`
+
+            render('sistema_explicacao', sistema_explicacao);
+
+
+            // Teorema de Laplace
+            
+            let teorema_laplace = vetor_dimensao.map((_, i) => {
+                const matriz = subMatriz(criarMatrizTermos(termos), 1, i + 1);
+                const sinal = i%2 == 1 ? '-' : undefined;
+
+
+                return criarLatexMatriz(matriz, cores[i], null, null, sinal) + termos[i]   
+            }).reduce((prev, curr, index)=> {
+                prev += "\\," + curr;
+
+                if(index % 2 == 1 && index < vetor_dimensao.length - 1)
+                    prev += ' + ';
+
+                return prev;
+            }, '')
+
+            console.log(teorema_laplace)
+            
+            render("teorema_laplace", `${teorema_laplace} = 0`);
+
+
+            // Teorema de Laplace Reduzida
+            
+            let teorema_laplace_reduzida = vetor_dimensao.map((_, i) => {
+                const matriz = [[`M_{1${i+1}}`]];
+                const sinal = i%2 == 1 ? '-' : undefined;
+
+                return criarLatexMatriz(matriz, cores[i], null, null, sinal) + termos[i]   
+            }).reduce((prev, curr, index)=> {
+                prev += "\\," + curr;
+
+                if(index % 2 == 1 && index < vetor_dimensao.length - 1)
+                    prev += ' + ';
+
+                return prev;
+            }, '')
+
+            render("teorema_laplace_reduzida", `${teorema_laplace_reduzida} = 0`);
         }
 
         function prod(A, B){
@@ -252,6 +395,10 @@
             }
 
             return soma;
+        }
+
+        function letra(i){
+            return String.fromCharCode('a'.charCodeAt(0) + i);
         }
 
         function calcularFigura(funcaoM, dimensao=3){
@@ -268,8 +415,7 @@
             }
 
             for(let i = 0; i < incognitas.length;  i++){
-                const letra = String.fromCharCode('a'.charCodeAt(0) + i);
-                mostrarCalculos(`calculo_${letra}`, cores[i], subMatriz(M, 1, i + 1), letra, incognitas[i], i%2 == 1 ? '-' : undefined)
+                mostrarCalculos(`calculo_${letra(i)}`, cores[i], subMatriz(M, 1, i + 1), letra(i), incognitas[i], i%2 == 1 ? '-' : undefined)
             }
 
             const config = { name:'equação', withLabel:false, strokeWidth: 3, color: '#0808'};
@@ -280,14 +426,15 @@
         }
 
         
-        document.getElementById("forma").addEventListener("change", () => {
+        document.getElementById("forma").addEventListener("change", ({target}) => {
+            NUM_PONTOS = +target.value;
+
             limparPlanoCartesiano();
+            configurarEquacaoGeral();
         })
 
         board.on('down', function(e){
             const [x, y] = board.getUsrCoordsOfMouse(e);
-
-            const NUM_PONTOS = +document.getElementById("forma").value
 
             if(plano.length >= NUM_PONTOS){
                 limparPlanoCartesiano();
@@ -297,11 +444,7 @@
             
             
             if(plano.length == NUM_PONTOS){
-                switch(NUM_PONTOS){
-                    case 2: return calcularReta();  
-                    case 3: return calcularCirculo();  
-                    case 5: return calcularConica();
-                }
+                calcularFigura(CONFIG_EQUACOES[NUM_PONTOS].equacao, CONFIG_EQUACOES[NUM_PONTOS].dimensao);
             }        
         });
 
@@ -328,17 +471,18 @@ x-y+4z=2\\\\
 
 }
 
+
     function mostrarCalculos(id, cor, matriz, nome, valor, sinal=''){
-        const conteudo = matriz ? matriz.map(l => l.map(e => e.toFixed(2)).join('&')).join('\\\\'): '?&?\\\\?&?';
-        const latex = `
+        const conteudo = criarLatexMatriz(matriz, cor, nome, valor, sinal);
+        /*const latex = `
             {\\color{${cor}}
                 ${nome} = ${sinal}\\begin{vmatrix}
                     ${conteudo}
                     \\end{vmatrix}
                     = ${valor?.toFixed(2) || '?'}
-                }`
+                }`*/
 
-        render(id, latex);
+        render(id, conteudo);
     }
     </script>
 </body>
